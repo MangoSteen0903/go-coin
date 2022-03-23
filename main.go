@@ -1,36 +1,7 @@
 package main
 
-import (
-	"flag"
-	"fmt"
-	"os"
-)
+import "github.com/mangosteen0903/go-coin/cli"
 
-func usage() {
-	fmt.Printf("Welcome to Go-Coin! \n\n")
-	fmt.Printf("Please use the following commands: \n\n")
-	fmt.Printf("explorer:	Start the HTML Explorer \n")
-	fmt.Printf("rest:		Start the REST API (recommended) \n\n")
-	os.Exit(0)
-}
 func main() {
-	if len(os.Args) < 2 {
-		usage()
-	}
-
-	rest := flag.NewFlagSet("rest", flag.ExitOnError)
-	portFlag := rest.Int("port", 5000, "Sets the port of the server")
-
-	switch os.Args[1] {
-	case "explorer":
-		fmt.Println("Start Explorer")
-	case "rest":
-		rest.Parse(os.Args[2:])
-	default:
-		usage()
-	}
-	if rest.Parsed() {
-		fmt.Println(portFlag)
-		fmt.Println("Start Server")
-	}
+	cli.Start()
 }
