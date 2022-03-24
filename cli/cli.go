@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
@@ -16,7 +17,17 @@ func usage() {
 	fmt.Printf("-mode:		Choose 'rest' or 'html' or 'both' \n\t\t if you choose 'both', Rest API and HTML Explorer will run together. \n\n")
 	os.Exit(0)
 }
+func recievePort() int {
+	var port int
+	r := bufio.NewReader(os.Stdin)
+	fmt.Fscan(r, &port)
+	return port
+}
 
+func executeBothPort(restPort int, htmlPort int) {
+	go rest.Start(restPort)
+	explorer.Start(htmlPort)
+}
 func Start() {
 	if len(os.Args) == 1 {
 		usage()
@@ -28,11 +39,19 @@ func Start() {
 	switch *mode {
 	case "rest":
 		rest.Start(*port)
+
 	case "html":
 		explorer.Start(*port)
+
 	case "both":
-		go rest.Start(*port)
-		explorer.Start(*port + 50)
+
+		fmt.Println("Please input REST API's Port : ")
+		restPort := recievePort()
+
+		fmt.Println("Please input HTML Explorer's Port : ")
+		htmlPort := recievePort()
+
+		executeBothPort(restPort, htmlPort)
 	default:
 		usage()
 	}
